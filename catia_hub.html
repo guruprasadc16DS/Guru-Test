@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CATIA QA Hub</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #eef2ff, #f9fafc);
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: #1a3d7c;
+      color: white;
+    }
+
+    header h1 { font-size: 28px; }
+
+    .search-bar { margin-top: 15px; }
+
+    .search-bar input {
+      padding: 10px 15px;
+      width: 280px;
+      max-width: 90%;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    mark {
+      background-color: yellow;
+      color: black;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    .no-results {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: 500;
+      color: #999;
+      display: none;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .section h2 {
+      margin-bottom: 15px;
+      color: #1a3d7c;
+      border-left: 5px solid #4a90e2;
+      padding-left: 10px;
+    }
+
+    .subsections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .subsection {
+      padding: 20px;
+      background: #f4f7ff;
+      text-align: center;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      border: 1px solid #d0d7e2;
+    }
+
+    .subsection:hover {
+      background: #dfeaff;
+      transform: scale(1.03);
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>CATIA QA One Page Hub</h1>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search links..." onkeyup="searchFunction()">
+  </div>
+</header>
+
+<div class="container" id="content">
+
+  <div class="section">
+    <h2>CATIA General Communities</h2>
+    <div class="subsections">
+      <div class="subsection">CATIA QE @ 3DS India</div>
+      <div class="subsection">CATIA R&D @ 3DS India Lab</div>
+      <div class="subsection">CATIA QA Cloud Community</div>
+      <div class="subsection">3DS CATIA</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Automation</h2>
+    <div class="subsections">
+      <div class="subsection">CHEETAH Automation Framework</div>
+      <div class="subsection">CAFET Training</div>
+      <div class="subsection">CATIA QA Automation</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>CATIA AI Communities</h2>
+    <div class="subsections">
+      <div class="subsection">AI Within 3DS</div>
+      <div class="subsection">AI Coding Assistant</div>
+      <div class="subsection">AI for QA</div>
+    </div>
+  </div>
+
+  <div class="no-results" id="noResults">No results found</div>
+
+</div>
+
+<footer>
+  © 2026 CATIA Hub
+</footer>
+
+<script>
+function fuzzyMatch(text, query) {
+  let t = text.toLowerCase();
+  let q = query.toLowerCase();
+  let i = 0, j = 0;
+  while (i < t.length && j < q.length) {
+    if (t[i] === q[j]) j++;
+    i++;
+  }
+  return j === q.length;
+}
+
+function searchFunction() {
+  const input = document.getElementById('searchInput');
+  const filter = input.value.toLowerCase();
+  const items = document.querySelectorAll('.subsection');
+  const noResults = document.getElementById('noResults');
+
+  let firstMatch = null;
+  let visibleCount = 0;
+
+  items.forEach(item => {
+    const originalText = item.textContent;
+    const lowerText = originalText.toLowerCase();
+
+    if (filter === "") {
+      item.innerHTML = originalText;
+      item.style.display = '';
+      return;
+    }
+
+    if (lowerText.includes(filter) || fuzzyMatch(lowerText, filter)) {
+      const regex = new RegExp(`(${filter})`, 'gi');
+      const highlighted = originalText.replace(regex, '<mark>$1</mark>');
+      item.innerHTML = highlighted;
+      item.style.display = '';
+      visibleCount++;
+
+      if (!firstMatch) firstMatch = item;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+
+  noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+
+  if (firstMatch) {
+    firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+</script>
+
+</body>
+</html>
